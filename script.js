@@ -4,7 +4,7 @@ const dropdown = document.querySelectorAll(".dropdown select");
 const btn = document.querySelector("#btn");
 const fromCurrancy = document.querySelector(".from select");
 const toCurrancy = document.querySelector(".to select");
-const result = document.querySelector(".msg")
+const result = document.querySelector(".result");
 
 const updateFlag = (element) => {
     let currencyCode = element.value;
@@ -12,24 +12,24 @@ const updateFlag = (element) => {
     let newSrc = `https://flagsapi.com/${countryCode}/flat/64.png`;
     let img = element.parentElement.querySelector("img");
     img.src = newSrc;
-}
+};
 
-const exchangeRate = async() => {
+const exchangeRate = async () => {
     let amount = document.querySelector("form input");
     let amtValue = amount.value;
-    if(amtValue === "" || amtValue < 1){
+    if (amtValue === "" || amtValue < 1) {
         amtValue = 1;
         amount.value = "1";
-    }
-    
+    };
+
     const URL = `${BASE_URL}/${fromCurrancy.value.toLowerCase()}.json`;
     let response = await fetch(URL);
     let data = await response.json();
     let rate = data[fromCurrancy.value.toLowerCase()][toCurrancy.value.toLowerCase()];
-    
+
     let finalAmount = amtValue * rate;
-    result.innerText = `${amtValue} ${fromCurrancy.value} = ${finalAmount} ${toCurrancy.value}`;    
-};    
+    result.innerText = `${amtValue} ${fromCurrancy.value} = ${finalAmount} ${toCurrancy.value}`;
+};
 
 for (let select of dropdown) {
     for (let currencyCode in countryList) {
@@ -37,23 +37,23 @@ for (let select of dropdown) {
         newOption.innerText = currencyCode;
         newOption.value = currencyCode;
         if (select.name === "from" && currencyCode === "USD") {
-            newOption.selected = "selected";
+            newOption.selected = true;
         } else if (select.name === "to" && currencyCode === "INR") {
-            newOption.selected = "selected";
-        }
+            newOption.selected = true;
+        };
         select.append(newOption);
-    }
+    };
 
     select.addEventListener("change", (evnt) => {
         updateFlag(evnt.target);
     })
-}
+};
 
 btn.addEventListener("click", (evnt) => {
     evnt.preventDefault();
     exchangeRate();
-})
+});
 
 window.addEventListener("load", () => {
     exchangeRate();
-})
+});
